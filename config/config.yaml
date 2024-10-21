@@ -1,0 +1,18 @@
+# Environment configuration
+environment: "dev"
+
+# Service configuration
+service_config:
+  name: auth-service  # Name of the service
+  port: 8080          # Port on which the service runs
+  timeout: 10         # Request timeout in seconds
+  retries: 3          # Number of retries on failure
+
+# Database configuration
+db_config:
+  postgres_uri: "POSTGRES_URI"  # URI for PostgreSQL database
+  redis_uri: "REDIS_URI"        # URI for Redis database
+
+# Logging configuration
+logging_config:
+  level: "info"  # Logging level
