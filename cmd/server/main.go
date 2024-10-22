@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"github.com/madhwan-codes/authify/internal/config"
+	"log"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	_, loadConfigErr := config.LoadConfig()
+	if loadConfigErr != nil {
+		log.Fatal("Failed to load configurations, error: ", loadConfigErr)
+	}
+
 }

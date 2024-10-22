@@ -25,8 +25,29 @@ type ServiceConfig struct {
 
 // DBConfig holds the configuration for the database.
 type DBConfig struct {
-	PostgresUri string `mapstructure:"postgres_uri"` // URI for PostgreSQL database
-	RedisUri    string `mapstructure:"redis_uri"`    // URI for Redis database
+	PostgresConfig PostgresConfig `mapstructure:"postgres_config"` // URI for PostgreSQL database
+	RedisConfig    RedisConfig `mapstructure:"redis_config"`    // URI for Redis database
+}
+
+// RedisConfig holds the configuration for Redis.
+type RedisConfig struct {
+	RedisUri             string `mapstructure:"redis_uri"`              // URI for Redis database
+	MaxIdleConnections   int    `mapstructure:"max_idle_connections"`   // Max Idle Connections
+	MaxActiveConnections int    `mapstructure:"max_active_connections"` // Max Active Connections
+	IdleTimeout          int    `mapstructure:"idle_timeout"`           // Idle timeout in seconds
+	Wait                 bool   `mapstructure:"wait"`                   // Wait for a connection to be available
+}
+
+// PostgresConfig holds the configuration for PostgreSQL.
+type PostgresConfig struct {
+	PostgresUri          string `mapstructure:"postgres_uri"`           // URI for PostgreSQL database
+	MaxIdleConnections   int    `mapstructure:"max_idle_connections"`   // Max Idle Connections
+	MaxOpenConnections   int    `mapstructure:"max_open_connections"`   // Max Open Connections
+	ConnectionTimeout    int    `mapstructure:"connection_timeout"`     // Connection timeout in seconds
+	IdleTimeout          int    `mapstructure:"idle_timeout"`           // Idle timeout in seconds
+	ConnMaxLifetime      int    `mapstructure:"conn_max_lifetime"`      // Maximum amount of time a connection may be reused
+	ConnMaxIdleTime      int    `mapstructure:"conn_max_idle_time"`     // Maximum amount of time a connection may be idle
+	PreferSimpleProtocol bool   `mapstructure:"prefer_simple_protocol"` // Prefer simple protocol
 }
 
 // LoggingConfig holds the configuration for logging.
@@ -57,15 +78,15 @@ func LoadConfig() (*AppConfig, error) {
 	}
 
 	// Get the actual values from the environment using keys from the config.yaml
-	config.DBConfig.PostgresUri = os.Getenv(config.DBConfig.PostgresUri)
-	config.DBConfig.RedisUri = os.Getenv(config.DBConfig.RedisUri)
+	config.DBConfig.PostgresConfig.PostgresUri = os.Getenv(config.DBConfig.PostgresConfig.PostgresUri)
+	config.DBConfig.RedisConfig.RedisUri = os.Getenv(config.DBConfig.RedisConfig.RedisUri)
 
 	// Ensure the DB URIs are populated
-	if config.DBConfig.PostgresUri == "" {
+	if config.DBConfig.PostgresConfig.PostgresUri == "" {
 		return nil, fmt.Errorf("POSTGRES_URI is not set in the environment")
 	}
 
-	if config.DBConfig.PostgresUri == "" {
+	if config.DBConfig.RedisConfig.RedisUri == "" {
 		return nil, fmt.Errorf("REDIS_URI is not set in the environment")
 	}
 
